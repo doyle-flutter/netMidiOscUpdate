@@ -1,32 +1,16 @@
-// 코드 정리 예정....
+var app = require('express')(),
+    http = require('http').Server(app),
+    io = require('socket.io')(http),
+    osc = require('node-osc');
 
-var app = require('express')(); 
-var http = require('http').Server(app); 
-var io = require('socket.io')(http); 
-var osc = require('node-osc');
+app.get('/', (req, res) => res.send("hi")); 
+app.get("/chat",(req,res) => res.sendFile('/Users/doylekim/wserver/index.html'));
 
-app.get('/', function(req, res){ 
-    console.log("asd");
-    res.send("hi"); 
-}); 
-app.get("/chat",(req,res) =>{
-    res.sendFile('/Users/doylekim/wserver/index.html');
-});
-
+io.on('connection', (socket) => socket.on('send_message', (msg) => io.emit('receive_message', msg)));
 
 var oscServer = new osc.Server(44100, '0.0.0.0');
-
-io.on('connection', function(socket){ 
-    socket.on('send_message', function(msg){ 
-        io.emit('receive_message', msg); 
-    }); 
-    // oscServer.on("message", function (msg, rinfo) {
-    //     console.log(msg);
-    // });
-});
-
-oscServer.on("message", function (msg, rinfo) {
-    console.log(msg);
+oscServer.on("message", (msg, rinfo) => {
+    console.log(rinfo);
     var data;
     if(msg.length > 2){
         data = msg[2];       
@@ -38,7 +22,7 @@ oscServer.on("message", function (msg, rinfo) {
         "name":"James",
         "message":data
     });
+    return;
 });
 
-
-http.listen(8808, function(){ console.log('listening on :8808'); });
+http.listen(8808, () => console.log('listening on :8808'));
