@@ -2,10 +2,11 @@
 UPDATE NetMIDI & OCS
 OSC 신호 송수신 추가
 
-stack  
+## stack  
 nodejs(express) : socket.io, node-osc  
 flutter : flutter_socket_io, flutter_midi
 
+## file
 서버 : index.js
 제어 1번 (앱) : sendPiano.dart  
 제어 2번 (웹) : index.html  
